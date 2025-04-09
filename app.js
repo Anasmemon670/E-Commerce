@@ -290,5 +290,18 @@ function FindTotalSummaryOfEachProduct() {
 }
 
 function FindHighestTotalStockProduct(){
-    let FindHighStockProduct = {document.getElementById("FindTheHighestTotalStockProductIdentification");
+    const total = p => p.variations.reduce((t, v) => t + v.quantity, 0);
+
+    const showMaxStock = () => {
+      const maxProduct = products.reduce((max, p) => total(p) > total(max) ? p : max);
+      document.getElementById("output").innerHTML = products.reduce((html, p) => {
+        const highlight = p.title === maxProduct.title ? "highlight" : "";
+        return html + `<div class="product ${highlight}">
+          <h3>${p.title}</h3>
+          <p>Total Stock: ${total(p)}</p>
+        </div>`;
+      }, "");
+    };
+
+    showMaxStock()
 }
