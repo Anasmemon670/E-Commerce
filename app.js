@@ -3,9 +3,9 @@ var products = [
         id: 101,
         title: "Sony LED 40 inch",
         variations: [
-            { id: 1, color: "black", price: 50000, quantity: 5 },
+            { id: 1, color: "silver", price: 50000, quantity: 5 },
             { id: 2, color: "red", price: 50000, quantity: 1 },
-            { id: 3, color: "silver", price: 55000, quantity: 8 },
+            { id: 3, color: "black", price: 55000, quantity: 8 },
         ],
         reviews: [
             {
@@ -41,9 +41,9 @@ var products = [
         id: 102,
         title: "Mobile",
         variations: [
-            { id: 1, color: "Silver", price: 35000, quantity: 5 },
+            { id: 1, color: "Gray", price: 35000, quantity: 5 },
             { id: 2, color: "red", price: 25000, quantity: 1 },
-            { id: 3, color: "black", price: 75000, quantity: 8 },
+            { id: 3, color: "silver", price: 75000, quantity: 6 },
         ],
         reviews: [
             {
@@ -118,23 +118,30 @@ function FindTheProductsTitle() {
 function FindTheProductsOneVariation() {
     let ProductVariation = document.getElementById("FindTheProductsOneVariation");
 
-    let FindTheProductVariation = products.find((product) => product.variations);
+    let FindTheProductVariation = products.filter(product =>
+        product.variations.some(variation => variation.color === "black")
+    );
 
-    let matchingProductVariation = FindTheProductVariation.variations.find(variation => variation.color === "black");
-
-    if (!FindTheProductVariation) {
+    if (FindTheProductVariation.length === 0) {
         ProductVariation.innerHTML = "<p style='color: red;'>No product found with the given color.</p>";
         return;
     }
 
-    ProductVariation.innerHTML = `
-        <h2><strong>Product Found</strong></h2>
-        <p><strong>ID: ${FindTheProductVariation.id}</strong></p>
-        <p><strong>Title: ${FindTheProductVariation.title}</strong></p>
-        <p><strong>Color: ${matchingProductVariation.color}</strong></p>
-        <p><strong>Price: ${matchingProductVariation.price}</strong></p>
-        <p><strong>Quantity: ${matchingProductVariation.quantity}</strong></p>
-    `;
+    let matchingvariation = FindTheProductVariation.map(product =>
+        product.variations
+            .filter(variation => variation.color === "black")
+            .map(variation => `
+                    <h2><strong>Product Found</strong></h2>
+                    <p><strong>ID: ${product.id}</strong></p>
+                    <p><strong>Title: ${product.title}</strong></p>
+                    <p><strong>Color: ${variation.color}</strong></p>
+                    <p><strong>Price: ${variation.price}</strong></p>
+                    <p><strong>Quantity: ${variation.quantity}</strong></p>
+                    <hr>`
+            ).join("")
+    ).join("");
+
+    ProductVariation.innerHTML = matchingvariation;
 }
 
 function CalculateAllProductQuantity() {
@@ -226,12 +233,62 @@ function CalculateTheTotalRevenueOfProduct() {
     let FindTotalStock = document.getElementById("FindTheTotalStockProduct");
 
     let FindProductStock = products.reduce((total, product) => {
-        return total + product.variations.reduce((sum, price) => sum + price.price * price.quantity , 0)
+        return total + product.variations.reduce((sum, price) => sum + price.price * price.quantity, 0)
     }, 0);
 
-    console.log(FindProductStock)
+    console.log(FindProductStock);
 
     FindTotalStock.innerHTML = `<h3><strong>Total Stock: ${FindProductStock}</strong></h3>`;
 }
 
+function FindTheProductQuantityGreaterThan5() {
+    let FindQuantity = document.getElementById("FindTheProductQuantityGreaterThanFive");
 
+    let FindQuantityGreaterThanFive = products.filter(product =>
+        product.variations.some(variationsquantity => variationsquantity.quantity > 5))
+
+    console.log(FindQuantityGreaterThanFive)
+
+    if (!FindQuantityGreaterThanFive) {
+        ProductVariation.innerHTML = "<p style='color: red;'>No product found with the given color.</p>";
+        return;
+    }
+
+    let QuantityPutTheHTML = FindQuantityGreaterThanFive.map(product =>
+        product.variations.filter(variation =>
+            variation.quantity > 5).map(Products => `
+        <h2><strong>Product Found</strong></h2>
+        <p><strong>ID: ${Products.id}</strong></p>
+        <p><strong>Title: ${product.title}</strong></p>
+        <p><strong>Color: ${Products.color}</strong></p>
+        <p><strong>Price: ${Products.price}</strong></p>
+        <p><strong>Quantity: ${Products.quantity}</strong></p>
+        <hr>`
+            )).join("")
+
+    FindQuantity.innerHTML = QuantityPutTheHTML;
+
+}
+
+function FindTotalSummaryOfEachProduct() {
+    let FindTotalReviewsAndVariation = document.getElementById("FindTotalSummaryOfEachProduct");
+
+    let FindSummary = products.find(product => product.title); 
+
+    if (!FindSummary) {
+        FindTotalReviewsAndVariation.innerHTML = "<p style='color: red;'>No product found.</p>";
+        return;
+    }
+
+    FindTotalReviewsAndVariation.innerHTML = `
+        <h2><strong>Product Found</strong></h2>
+        <p><strong>ID: ${FindSummary.id}</strong></p>
+        <p><strong>Title: ${FindSummary.title}</strong></p>
+        <p><strong>Total Variations: ${FindSummary.variations.length}</strong></p>
+        <p><strong>Total Reviews: ${FindSummary.reviews.length}</strong></p>
+    `;
+}
+
+function FindHighestTotalStockProduct(){
+    let FindHighStockProduct = {document.getElementById("FindTheHighestTotalStockProductIdentification");
+}
